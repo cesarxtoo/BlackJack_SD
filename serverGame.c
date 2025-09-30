@@ -331,18 +331,33 @@ int main(int argc, char *argv[])
 			card = getRandomCard(&session.gameDeck);
 			addCardtoDeck(session.player2Deck,card);
 		}
-		
+		printSession(session);
+
 		int opcion_elegida1;
-		bytes_recibidos = recv(socketPlayer1, &opcion_elegida1, sizeof(int), 0);
-
-		int opcion_elegida2;
-		bytes_recibidos = recv(socketPlayer2, &opcion_elegida2, sizeof(int), 0);
-
-		if (bytes_recibidos < 0)
-			showError("ERROR while reading from socket 2");
-			
-		if (bytes_recibidos < 0)
+		do{
+			bytes_recibidos = recv(socketPlayer1, &opcion_elegida1, sizeof(int), 0);
+			if (bytes_recibidos < 0)
 			showError("ERROR while reading from socket 1");
+			if(opcion_elegida1 == TURN_PLAY_HIT){
+			card = getRandomCard(&session.gameDeck);
+			addCardtoDeck(session.player1Deck,card);
+			}
+			printSession(session);
+		} while(opcion_elegida1 != TURN_PLAY_HIT);
+		
+		int opcion_elegida2;
+		do{
+			bytes_recibidos = recv(socketPlayer1, &opcion_elegida2, sizeof(int), 0);
+			if (bytes_recibidos < 0)
+			showError("ERROR while reading from socket 2");
+			if(opcion_elegida2 == TURN_PLAY_HIT){
+			card = getRandomCard(&session.gameDeck);
+			addCardtoDeck(session.player1Deck,card);
+			}
+		printSession(session);
+		} while(opcion_elegida2!= TURN_PLAY_HIT);
+			
+
 		/*
 		para depurar mostrar por pantalla
 		*/
